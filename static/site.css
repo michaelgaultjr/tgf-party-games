@@ -1,0 +1,57 @@
+.center {
+    position: absolute;
+    
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.roll-btn {
+    /* Text Styling */
+    font-size: 1.5rem;
+    color: #ffffff;
+
+    /* Button Styling */
+    background-color: #009d00;
+    box-shadow: 2px 2px 5px black;
+    border-radius: 3px;
+    border: none;
+    width: 15rem;
+    
+    transition: all .2s ease-in-out;
+}
+
+.roll-btn:not(:disabled):hover {
+    transform: scale(1.025);
+    filter: brightness(115%);
+}
+
+.roll-btn:disabled {
+    filter: brightness(75%);
+    transform: scale(0.90);
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+}
+
+.icon-display {
+    font-size: 12rem;
+    text-align: center;
+    user-select: none;
+}
+
+/* Animations */
+.anim-rotate {
+    animation: rotation 1s infinite linear;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
