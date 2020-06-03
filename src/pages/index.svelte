@@ -1,3 +1,1 @@
-<script>
-  import { layout, url } from "@sveltech/routify";
-</script>
+<h1>Home Page</h1>
