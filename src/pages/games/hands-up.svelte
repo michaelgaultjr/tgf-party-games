@@ -3,13 +3,16 @@
 
 <script>
 	import { fly, fade } from 'svelte/transition';
-	import { Random } from "random-js";
-	const random = new Random();
 	const wait = ms => new Promise(res => setTimeout(res, ms));
+	const rng = (min, max) => {
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
 
 	async function waitAndCycle(count = 8, duration = 4000) {
 		// Generate an offset to appear random
-		const offset = random.integer(0, options.length - 1)
+		const offset = rng(0, options.length - 1);
 		const cycleCount = count + offset;
 
 		for (let i = offset; i < cycleCount; i++) {
@@ -22,7 +25,7 @@
 		rolling = true;
 		await waitAndCycle();
 
-		let index = random.integer(0, options.length - 1);
+		let index = rng(0, options.length - 1);
 		selected = options[index];
 
 		rolling = false;
