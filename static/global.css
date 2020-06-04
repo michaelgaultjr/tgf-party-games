@@ -6,6 +6,7 @@ body {
 	background-color: #4B0082;
 	width: 100vw;
 	height: 100vh;
+	overflow-x: hidden;
 }
 
 /* Center Classes */
@@ -84,3 +85,37 @@ button {
 button:focus {
 	border-color: #666;
 }
+
+.play-btn {
+	color: #ffffff;
+	background-color: #009d00;
+}
+
+.stop-btn {
+	color: #ffffff;
+	background-color: darkred;
+}
+
+.fancy-btn {
+	/* Text Styling */
+	font-size: 1.5rem;
+
+	/* Button Styling */
+	box-shadow: 2px 2px 5px black;
+	border-radius: 3px;
+	border: none;
+	width: 15rem;
+	
+	user-select: none;
+	transition: all .2s ease-in-out;
+}
+
+	.fancy-btn:not(:disabled):hover {
+		transform: scale(1.025);
+		filter: brightness(115%);
+	}
+
+	.fancy-btn:disabled {
+		filter: brightness(75%);
+		transform: scale(0.90);
+	}

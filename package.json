@@ -1,5 +1,5 @@
 {
-  "name": "svelte-app",
+  "name": "tgf-paty-games",
   "version": "1.0.0",
   "scripts": {
     "dev": "run-p routify rollup",
@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "@sveltech/routify": "^1.7.12",
+    "easytimer.js": "^4.1.1",
+    "numeral": "^2.0.6",
     "svelte": "^3.20.1"
   }
 }
