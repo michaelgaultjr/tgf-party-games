@@ -8,14 +8,20 @@ body {
 	overflow-x: hidden;
 
 	background-color: #4B0082;
+}
 
-	/* background: repeating-linear-gradient(
+.background-stripes {
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	background: repeating-linear-gradient(
 		-45deg,
 		transparent,
 		transparent 160px,
 		rgba(0, 0, 0, 0.1) 160px,
 		rgba(0, 0, 0, 0.1) 320px
-	) #4B0082; */
+	);
+	z-index: -100;
 }
 
 /* Center Classes */
@@ -41,14 +47,14 @@ body {
 	justify-content: center;
 }
 
-/* Center Classes */
-
 #routify-app {
 	width: 100vw;
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
 }
+
+/* Center Classes */
 
 a {
 	color: rgb(0,100,200);

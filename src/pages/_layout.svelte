@@ -4,10 +4,11 @@
 
     $beforeUrlChange((event, store) => {
         metatags.title = '🎉TGF Party Games 🎮';
-        metatags.title = 'Simple & Fun Party Games for everyone! Great for group zoom/video calls';
+        metatags.description = 'Simple & Fun Party Games for everyone! Great for group zoom/video calls';
         return true;
     });
     const games = $layout.children[0].children;
 </script>
 
+<div class="background-stripes" />
 <slot decorator={TabsTransition} scoped={{ games }} />
