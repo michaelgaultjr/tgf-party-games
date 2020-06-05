@@ -5,8 +5,7 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import copy from 'rollup-plugin-copy'
 import del from 'del'
-
-
+import json from '@rollup/plugin-json';
 
 const staticDir = 'static'
 const distDir = 'dist'
@@ -60,7 +59,7 @@ function createConfig({ output, inlineDynamicImports, plugins = [] }) {
         dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
       }),
       commonjs(),
-
+      json(),
 
       // If we're building for production (npm run build
       // instead of npm run dev), minify

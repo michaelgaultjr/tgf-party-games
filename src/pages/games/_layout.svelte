@@ -1,45 +1,45 @@
 <script>
     import { route, metatags, beforeUrlChange  } from '@sveltech/routify';
     import { fly } from 'svelte/transition';
-
-    $: if ($route.meta.title) {
-        metatags.title = $route.meta.title;
-    }
-    metatags.description = `How To Play: ${$route.meta.description}`;
-
-    let showing = false;
+    import Emoji from '../../components/Emoji.svelte';
+    import { emoji } from '../../utils.js';
 
     $beforeUrlChange((event, store) => {
+        if ($route.meta.title) metatags.title = `${$route.meta.title} ${$route.meta.icon}`;
+        if ($route.meta.description) metatags.description = `How To Play: ${$route.meta.description}`;
+
         showing = false;
         return true;
     });
 
-    const toggleShowing = () => {
-        showing = !showing
-    }
+    let showing = false;
 </script>
 
 <header>
     <a class="logo-header" href="/">
-        <h1>🎉 TGF Party Games 🎮</h1>
+        <h1>
+            <Emoji content='🎉' /> TGF Party Games <Emoji content='🎮' />
+        </h1>
     </a>
 </header>
-<main style="position: relative; height: 100%;">
+<main style="position: relative; height: auto;">
     <slot />
-    <div id="how-to-play" style="flex-direction: column; text-align: center;" class="flex-center">
-        <h3 class="dropdown" on:click={toggleShowing}>How To Play {$route.meta.title} { showing ? '🔼' : '🔽'}</h3>
+</main>
+<footer>
+    <div id="how-to-play" style="flex-direction: column; text-align: center; font-size: 1em; margin-top: 3rem" class="flex-center">
+        <h3 class="dropdown" on:click={() => showing = !showing}>How To Play {$route.meta.title} <Emoji content={showing ? '⬆️' : '⬇️'} /></h3>
         {#if showing}
             <div class="flex-center">
-                <p transition:fly={{ duration: 500, y: -20}}>{$route.meta.description}</p>
+                <p use:emoji transition:fly={{ duration: 500, y: -20}}>{$route.meta.description}</p>
             </div>
         {/if}
     </div>
-</main>
+</footer>
 
 <style>
     .logo-header {
         text-align: center;
-        font-size: clamp(.8rem, 4vw, 2rem);
+        font-size: clamp(0.6rem, 4.25vw, 2rem);
         color: white;
         text-decoration: none;
     }
@@ -66,6 +66,6 @@
         background-color: rgba(0, 0, 0, 0.75);
         padding: .75rem;
         border-radius: 5px;
-        width: 75%;
+        max-width: 75%;
     }
 </style>

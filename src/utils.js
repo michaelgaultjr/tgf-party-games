@@ -1,3 +1,5 @@
+import twemoji from 'twemoji';
+
 // https://gist.github.com/nikolas/b0cce2261f1382159b507dd492e1ceef
 export const lerpHexColor = (a, b, amount) => {
     const ar = a >> 16,
@@ -21,4 +23,11 @@ export const random = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export const emoji = (node) => {
+    twemoji.parse(node, {
+        folder: 'svg',
+        ext: '.svg'
+    });
 }

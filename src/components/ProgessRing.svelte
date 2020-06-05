@@ -72,13 +72,38 @@
 		font-size="4.75rem"
 		fill="lightgray"
 		dy="7.5%">
-    	<slot />
   	</text>
 </svg>
-
+<div class="progress-ring-content">
+	<slot />
+</div>
 <style>
 	.progress-ring__circle {
         transform: rotate(-90deg);
 		transform-origin: 50% 50%;
+    }
+
+	.progress-ring-content {
+        position: fixed;
+        padding: 0px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+		max-width: 75%;
+
+        transition: all 250ms ease-in-out;
+    }
+
+     @media (pointer: fine) {
+        .progress-ring-content:hover {
+            transform: scale(1.1) translate(-45%, -45%);
+			filter: brightness(115%);
+        }
+    }
+
+    .progress-ring-content:active {
+        font-size: 1.1em;
+        filter: brightness(90%);
+		transform: scale(.95) translate(-52%, -52%);
     }
 </style>

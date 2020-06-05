@@ -3,10 +3,19 @@ body {
 	margin: 0;
 	box-sizing: border-box;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-	background-color: #4B0082;
 	width: 100vw;
 	height: 100vh;
 	overflow-x: hidden;
+
+	background-color: #4B0082;
+
+	/* background: repeating-linear-gradient(
+		-45deg,
+		transparent,
+		transparent 160px,
+		rgba(0, 0, 0, 0.1) 160px,
+		rgba(0, 0, 0, 0.1) 320px
+	) #4B0082; */
 }
 
 /* Center Classes */
@@ -117,5 +126,26 @@ button:focus {
 
 	.fancy-btn:disabled {
 		filter: brightness(75%);
-		transform: scale(0.90);
+		transform: scale(.90);
 	}
+	
+	.fancy-btn:active {
+		filter: brightness(90%);
+		transform: scale(.95);
+	}
+
+img.emoji {
+	height: 1em;
+	width: 1em;
+	margin: 0 .05em 0 .1em;
+	vertical-align: -0.1em;
+
+	user-select: none;
+}
+
+img.emoji-fill {
+	width: 100%;
+	height: 100%;
+
+	user-select: none;
+}
