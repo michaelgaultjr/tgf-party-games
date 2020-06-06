@@ -1,16 +1,8 @@
 <script>
-    import { route, metatags, beforeUrlChange  } from '@sveltech/routify';
+    import { route, focus } from '@sveltech/routify';
     import { fly } from 'svelte/transition';
     import Emoji from '../../components/Emoji.svelte';
     import { emoji } from '../../utils.js';
-
-    $beforeUrlChange((event, store) => {
-        if ($route.meta.title) metatags.title = `${$route.meta.title} ${$route.meta.icon}`;
-        if ($route.meta.description) metatags.description = `How To Play: ${$route.meta.description}`;
-
-        showing = false;
-        return true;
-    });
 
     let showing = false;
 </script>
@@ -26,11 +18,11 @@
     <slot />
 </main>
 <footer>
-    <div id="how-to-play" style="flex-direction: column; text-align: center; font-size: 1em; margin-top: 3rem" class="flex-center">
+    <div id="how-to-play" style="flex-direction: column; text-align: center; font-size: 1em; margin-top: 2.25rem" class="flex-center">
         <h3 class="dropdown" on:click={() => showing = !showing}>How To Play {$route.meta.title} <Emoji content={showing ? '⬆️' : '⬇️'} /></h3>
         {#if showing}
             <div class="flex-center">
-                <p use:emoji transition:fly={{ duration: 500, y: -20}}>{$route.meta.description}</p>
+                <p use:focus use:emoji transition:fly={{ duration: 500, y: -20}}>{$route.meta.description}</p>
             </div>
         {/if}
     </div>

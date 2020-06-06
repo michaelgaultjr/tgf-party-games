@@ -1,1 +1,2 @@
 User-agent: *
+Sitemap: http://tgfpartygames.com/sitemap.xml
