@@ -1,0 +1,14 @@
+RewriteEngine On
+
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE] 
+
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule !.*.html$ %{REQUEST_FILENAME}.html [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . __app.html
+
+<Files "*.js">
+    ForceType text/javascript
+</Files>

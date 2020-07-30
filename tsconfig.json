@@ -1,0 +1,12 @@
+{
+    "include": ["src/**/*"],
+    "exclude": ["node_modules/*"],
+    "compilerOptions": {
+        "target": "es2020",
+        "module": "es2020",
+        "types": ["svelte"],
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "node",
+    }
+}

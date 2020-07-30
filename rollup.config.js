@@ -5,7 +5,10 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import copy from 'rollup-plugin-copy'
 import del from 'del'
+
 import json from '@rollup/plugin-json';
+import autoPreprocess from 'svelte-preprocess'
+import typescript from '@rollup/plugin-typescript';
 
 const staticDir = 'static'
 const distDir = 'dist'
@@ -22,20 +25,22 @@ function createConfig({ output, inlineDynamicImports, plugins = [] }) {
 
   return {
     inlineDynamicImports,
-    input: `src/main.js`,
+    input: `src/main.ts`,
     output: {
       name: 'app',
       sourcemap: true,
       ...output
     },
     plugins: [
+      typescript(),
+      json(),
       copy({
         targets: [
           { src: staticDir + '/**/!(__index.html)', dest: distDir },
           { src: `${staticDir}/__index.html`, dest: distDir, rename: '__app.html', transform },
         ],
-	copyOnce: true,
-	flatten: false
+        copyOnce: true,
+        flatten: false
       }),
       svelte({
         // enable run-time checks when not in production
@@ -45,7 +50,8 @@ function createConfig({ output, inlineDynamicImports, plugins = [] }) {
         // a separate file — better for performance
         css: css => {
           css.write(`${buildDir}/bundle.css`);
-        }
+        },
+        preprocess: autoPreprocess()
       }),
 
       // If you have external dependencies installed from
@@ -59,7 +65,6 @@ function createConfig({ output, inlineDynamicImports, plugins = [] }) {
         dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
       }),
       commonjs(),
-      json(),
 
       // If we're building for production (npm run build
       // instead of npm run dev), minify

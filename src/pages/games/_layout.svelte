@@ -14,7 +14,7 @@
         </h1>
     </a>
 </header>
-<main style="position: relative; height: auto;">
+<main>
     <slot />
 </main>
 <footer>
@@ -59,5 +59,10 @@
         padding: .75rem;
         border-radius: 5px;
         max-width: 75%;
+    }
+
+    main {
+        position: relative; 
+        height: auto;
     }
 </style>

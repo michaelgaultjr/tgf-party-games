@@ -45,7 +45,7 @@
 
 <h1 class="center-text" style="font-size: 2.5rem; margin-block-start: 0.3em;">{selected && !rolling ? selected.text : '?'}</h1>
 <div class="flex-center">
-	<button class="fancy-btn play-btn" on:click={roll} disabled={rolling}>
+	<button class="fancy-btn btn-play" on:click={roll} disabled={rolling}>
 		{rolling ? 'Selecting...' : 'Play'}
 	</button>
 </div>

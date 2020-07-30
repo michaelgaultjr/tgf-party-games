@@ -101,12 +101,12 @@ button:focus {
 	border-color: #666;
 }
 
-.play-btn {
+.btn-play {
 	color: #ffffff;
 	background-color: #009d00;
 }
 
-.stop-btn {
+.btn-stop {
 	color: #ffffff;
 	background-color: darkred;
 }
@@ -125,7 +125,7 @@ button:focus {
 	transition: all .2s ease-in-out;
 }
 
-	.fancy-btn:not(:disabled):hover {
+	.fancy-btn:not(:disabled):not(:active):hover {
 		transform: scale(1.025);
 		filter: brightness(115%);
 	}

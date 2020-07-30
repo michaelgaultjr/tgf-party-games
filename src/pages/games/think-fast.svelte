@@ -8,16 +8,19 @@
     import Emoji from '../../components/Emoji.svelte';
     import numeral from 'numeral';
     import { wait, random } from '../../utils.js';
+    import RandomList from '../../random-list.ts';
     import WordList from '../../data/think-fast-words.json';
 
-    let options = null;
-    const resetOptions = () => {
-        options = [];
-        WordList.forEach(word => {
-            options.push({ value: word, used: false })
-        });
-    }
-    resetOptions();
+    // let options = null;
+    // const resetOptions = () => {
+    //     options = [];
+    //     WordList.forEach(word => {
+    //         options.push({ value: word, used: false })
+    //     });
+    // }
+    // resetOptions();
+
+    const randomListOptions = new RandomList(WordList);
 
     // Intro Variables
     let playingIntro = false;
@@ -53,16 +56,12 @@
         }
         remaining--;
         value = remaining / 100;
-        display = numeral(value).format('0.00') + 's';
+        display = `${numeral(value).format('0.00')}s`;
     }
 
     const intro = async () => {
         playingIntro = true;
-        stage = 0;
-        await wait(1000);
-        stage = 1;
-        await wait(1000);
-        stage = 2;
+        for (stage = 0; stage < 2; stage++) await wait(1000);
         playingIntro = false;
     }
     
@@ -72,13 +71,7 @@
         if (!inProgress) {
             await intro();
 
-            if (!options.some(word => !word.used)) resetOptions();
-            const availableOptions = options.filter(word => !word.used)
-            
-            let index = random(0, availableOptions.length - 1);
-
-            selected = availableOptions[index].value;
-            availableOptions[index].used = true;
+            selected = randomListOptions.getRandomItem();
 
             await wait(500);
             startTimer();
@@ -116,7 +109,7 @@
 </div>
 
 <div class="flex-center">
-	<button class="fancy-btn" disabled={playingIntro} class:play-btn={!inProgress} class:stop-btn={inProgress} on:click={toggleTimer}>
+	<button class="fancy-btn" disabled={playingIntro} class:btn-play={!inProgress} class:btn-stop={inProgress} on:click={toggleTimer}>
 		{inProgress ? 'Stop' : 'Play'}
 	</button>
 </div>
