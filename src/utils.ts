@@ -1,4 +1,5 @@
 import twemoji from 'twemoji';
+import { Writable, writable } from 'svelte/store';
 
 // https://gist.github.com/nikolas/b0cce2261f1382159b507dd492e1ceef
 export const lerpHexColor = (a: number, b: number, amount: number): string => {
@@ -30,4 +31,56 @@ export const emoji = (node) => {
         folder: 'svg',
         ext: '.svg'
     });
+}
+
+// Based off of https://stackoverflow.com/questions/15069587/is-there-a-way-to-join-the-elements-in-an-js-array-but-let-the-last-separator-b
+export function oxfordJoin(items: Array<string>, conjunction: string = 'and'): string {
+    let l = items.length;
+    if (!l) return '';
+    if (l<2) return items[0];
+    if (l<3) return items.join(` ${conjunction} `);
+    items = items.slice();
+    items[l-1] = `${conjunction} ${items[l-1]}`;
+    return items.join(", ");
+}
+
+export class Stopwatch {
+    active: boolean;
+    totalTicks: number;
+    ticks: number;
+
+    interval: number;
+    onTick?: (ticks: number) => any;
+
+    constructor(ticks: number, onTick?: (ticks: number) => any) {
+        this.totalTicks = ticks;
+        this.onTick = onTick;
+    }
+
+    start(): void {
+        this.ticks = this.totalTicks;
+        this.interval = setInterval(() => this.tick(this), 10);
+        
+        this.active = true;
+    }
+
+    stop() {
+        clearInterval(this.interval);
+        this.active = false;
+    }
+
+    private tick(timer: Stopwatch) {
+        if (timer.ticks <= 0)
+        {
+            timer.stop();
+            return;
+        }
+        timer.ticks--;
+
+        timer.onTick(this.ticks);
+    }
+    
+    async toggle() {
+        this.active ? this.start() : this.stop();
+    }
 }

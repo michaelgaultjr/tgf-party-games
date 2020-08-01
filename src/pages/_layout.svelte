@@ -3,7 +3,7 @@
     import { TabsTransition } from "@sveltech/routify/decorators"
 
     $:{
-        metatags.title = $page.meta.title + $page.meta.icon || '🎉 TGF Party Games 🎮';
+        metatags.title = $page.meta.title + $page.meta.icon ? `${$page.meta.title} ${$page.meta.icon}` : '🎉 TGF Party Games 🎮';
         metatags.description = $page.meta.description || 'Simple & Fun Party Games for everyone! Great for group zoom/video calls';
     }
 

@@ -1,6 +1,6 @@
 <!-- routify:options icon="🤳 " -->
 <!-- routify:options title="Bring It" -->
-<!-- routify:options description="Tell everyone to put up 1, 2, or no hands and press play, anyone who put up the amount of hands that matches the result is out, if it's a tie play again." -->
+<!-- routify:options description="Press play and have everyone show the randomly selected item on the screen, whoever shows the item first wins." -->
 
 <script lang="typescript">
     import ItemList from '../../data/bring-it-items.json';
@@ -9,9 +9,9 @@
     import { wait } from '../../utils';
     import { fly } from 'svelte/transition';
 
-    const list = new RandomList(ItemList);
-    let item: string = list.getRandomItem();
-    let selecting = false;
+    const list = new RandomList<string>(ItemList);
+    let item: string = '...';
+    let selecting: boolean = false;
 
     async function nextItem() {
         selecting = true;
@@ -25,21 +25,21 @@
     const flyParams = { duration: 750, y: -75 }
 </script>
 
-<h1 class="center-text">Bring a...</h1>
+<h1 class="center-text dropshadow">Bring a...</h1>
 
 {#if selecting}
-    <div in:fly={flyParams} class="icon-display">
+    <div in:fly={flyParams} class="icon-display dropshadow">
         <div class="rotate">
             <Emoji content='❓' fill />
         </div>
     </div>
 {:else}
-    <span in:fly={flyParams} class="item-display">{item}</span>
+    <span in:fly={flyParams} class="item-display dropshadow">{item}</span>
 {/if}
 
 {#if !selecting}
     <div class="flex-center">
-        <button class="fancy-btn btn-play" on:click={nextItem}>Next</button>
+        <button class="fancy-btn btn-play" on:click={nextItem}>Play</button>
     </div>
 {/if}
 
@@ -50,10 +50,9 @@
 		position: relative;
 		max-width: var(--size);
 		max-height: var(--size);
-		height: var(--size);
 
-		margin-block-start: 6rem;
-		margin-block-end: 6rem;
+		margin-block-start: 2rem;
+		margin-block-end: 2 rem;
 
 		/* Center */
 		left: 50%;

@@ -2,139 +2,106 @@
 <!-- routify:options title="Think Fast" -->
 <!-- routify:options description="Select a player to play and then press the 🎲 or Play button. The player has 5 seconds to name 3 of the randomly selected item, if they successfully name the items, stop the timer by pressing countdown or Stop button, then record the time and move onto the next player, if times runs out, they are out. Whoever has the highest time by the end wins." -->
 
-<script>
+<script lang="typescript">
     import { fly } from 'svelte/transition';
     import ProgressRing from '../../components/ProgessRing.svelte';
     import Emoji from '../../components/Emoji.svelte';
     import numeral from 'numeral';
-    import { wait, random } from '../../utils.js';
-    import RandomList from '../../random-list.ts';
+    import { wait, Stopwatch } from '../../utils';
+    import RandomList from '../../random-list';
     import WordList from '../../data/think-fast-words.json';
 
-    // let options = null;
-    // const resetOptions = () => {
-    //     options = [];
-    //     WordList.forEach(word => {
-    //         options.push({ value: word, used: false })
-    //     });
-    // }
-    // resetOptions();
-
-    const randomListOptions = new RandomList(WordList);
+    const randomListOptions = new RandomList<string>(WordList);
 
     // Intro Variables
-    let playingIntro = false;
-    let stage = null;
+    let introPlaying: boolean = false;
+    let introStage: number = null;
 
     // Game State Variables
-    let inProgress = false;
-    let selected = null;
+    let inProgress: boolean = false;
+    let selectedItem: string = null;
 
-    let value = 5; // Progress Circle Value
-    let display = '🎲'; // Progress Circle Text
+    let circleText: string = '🎲'; // Progress Circle Text
+
+    const timer = new Stopwatch(500, (t: number) => {
+        timer.ticks = timer.ticks;
+        const remaining = t / 100;
+
+        circleText = `${numeral(remaining).format('0.00')}s`;
+    });
+
+    async function intro() {
+        introPlaying = true;
+        for (introStage = 0; introStage < 2; introStage++) await wait(1000);
+        introPlaying = false;
+    }
     
-    let remaining = 0;
-    let countdown = null;
+    async function toggleTimer() {
+        if (introPlaying) return;
 
-    const startTimer = (seconds = 5) => {
-        remaining = seconds * 100;
-        countdown = setInterval(timer, 10);
-        inProgress = true;
-    }
-
-    const stopTimer = () => {
-        clearInterval(countdown);
-        inProgress = false;
-    }
-
-    const timer = () => {
-        if (remaining <= 0)
-        {
-            display = '🔁';
-            stopTimer();
+        if (timer.active) {
+            timer.stop();
             return;
         }
-        remaining--;
-        value = remaining / 100;
-        display = `${numeral(value).format('0.00')}s`;
+
+        await intro();
+        selectedItem = randomListOptions.getRandomItem();
+        await wait(500);
+        timer.start();
     }
 
-    const intro = async () => {
-        playingIntro = true;
-        for (stage = 0; stage < 2; stage++) await wait(1000);
-        playingIntro = false;
-    }
-    
-    const toggleTimer = async () => {
-        if (playingIntro) return;
-
-        if (!inProgress) {
-            await intro();
-
-            selected = randomListOptions.getRandomItem();
-
-            await wait(500);
-            startTimer();
-        }
-        else {
-            stopTimer();
-        }
-    }
+    const flyParams = { duration: 1000, y: -30 }
 </script>
 
-{#if stage == null}
-    <h1 in:fly={{ duration: 1000, y: -30 }} class="center-text">
+{#if introStage == null}
+    <h1 in:fly={flyParams} class="center-text dropshadow">
         Press the <Emoji content='🎲' /> or Play to start!
     </h1>
-{:else if stage == 0}
-    <h1 in:fly={{ duration: 1000, y: -30 }} class="center-text">
+{:else if introStage == 0}
+    <h1 in:fly={flyParams} class="center-text dropshadow">
         Ready...
     </h1>
-{:else if stage == 1}
-    <h1 in:fly={{ duration: 1000, y: -30 }} class="center-text">
+{:else if introStage == 1}
+    <h1 in:fly={flyParams} class="center-text dropshadow">
         Set...
     </h1>
 {:else}
-    <h1 in:fly={{ duration: 1000, y: -30 }} class="center-text">
-        Go! Name 3 {selected ? selected : '??'}!
+    <h1 in:fly={flyParams} class="center-text dropshadow">
+        Go! Name 3 {selectedItem ? selectedItem : '??'}!
     </h1>
 {/if}
 
-<div class="flex-center progress-circle" on:click={toggleTimer}>
-    <ProgressRing max={5} bind:value size={400} stroke={24}>
-        <span class="progress-content">
-            <Emoji content={display} fill />
-        </span>
+<div class="flex-center" on:click={toggleTimer}>
+    <ProgressRing max={timer.totalTicks} bind:value={timer.ticks} size={350} stroke={24}>
+        <div class="progress-content-effects">
+            <span class="dropshadow" style="font-size: 6rem;">
+                <Emoji content={circleText} fill />
+            </span>
+        </div>
     </ProgressRing>
 </div>
 
 <div class="flex-center">
-	<button class="fancy-btn" disabled={playingIntro} class:btn-play={!inProgress} class:btn-stop={inProgress} on:click={toggleTimer}>
+	<button class="fancy-btn" disabled={introPlaying} class:btn-play={!inProgress} class:btn-stop={inProgress} on:click={toggleTimer}>
 		{inProgress ? 'Stop' : 'Play'}
 	</button>
 </div>
 
 <style>
-    .progress-circle {
-        max-width: 400px;
-        margin-top: 5rem;
-        margin-bottom: 5rem; 
-        user-select: none;
-
-        left: 50%;
-		position: relative;
-		transform: translateX(-50%);
+    .progress-content-effects {
+        transition: all 250ms ease-in-out;
     }
 
-    .progress-content {
-        font-size: 6rem;
-        filter: drop-shadow(2px 4px 6px black);
+    .progress-content-effects:active {
+        font-size: 1.1em;
+        filter: brightness(90%);
+		transform: scale(.95);
     }
 
-    @media (max-width: 768px) { 
-		.progress-circle {
-            margin-top: 2rem;
-            margin-bottom: 2rem;
+    @media (pointer: fine) {
+        .progress-content-effects:not(:active):hover {
+            transform: scale(1.1);
+			filter: brightness(115%);
         }
-	}
+    }
 </style>

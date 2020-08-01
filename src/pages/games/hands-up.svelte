@@ -2,12 +2,20 @@
 <!-- routify:options title="Hands Up" -->
 <!-- routify:options description="Tell everyone to put up 1, 2, or no hands and press play, anyone who put up the amount of hands that matches the result is out, if it's a tie play again." -->
 
-<script>
+<script lang="typescript">
 	import { fly } from 'svelte/transition';
 	import Emoji from '../../components/Emoji.svelte';
-	import { wait, random } from '../../utils.js';
+	import { wait, random } from '../../utils';
 
-	async function waitAndCycle(count = 8, duration = 4000) {
+	let rolling = false;
+	let selected = null;
+	const options = [
+		{ text: "Hands Down", icon: '✊' },
+		{ text: "Hand Up", icon: '✋' },
+		{ text: "Hands Up", icon: '🙌' }
+	];
+
+	async function waitAndCycle(count: number = 8, duration: number = 4000): Promise<void> {
 		// Generate an offset to appear random
 		const offset = random(0, options.length - 1);
 		const cycleCount = count + offset;
@@ -18,7 +26,7 @@
 		}
 	}
 
-	async function roll() {
+	async function roll(): Promise<void> {
 		rolling = true;
 		await waitAndCycle();
 
@@ -28,16 +36,10 @@
 		rolling = false;
 	}
 
-	let rolling = false;
-	let selected = null;
-	const options = [
-		{ text: "Hands Down", icon: '✊' },
-		{ text: "Hand Up", icon: '✋' },
-		{ text: "Hands Up", icon: '🙌' }
-	];
+	const flyParams = { duration: 750, y: -100 }
 </script>
 
-<div in:fly={{ duration: 750, y: -100 }} class="icon-display">
+<div in:fly={flyParams} class="icon-display dropshadow">
 	<div class:rotate={rolling}>
 		<Emoji content={selected ? selected.icon : '❓'} fill />
 	</div>

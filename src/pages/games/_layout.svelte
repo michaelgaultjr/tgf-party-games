@@ -9,7 +9,7 @@
 
 <header>
     <a class="logo-header" href="/">
-        <h1>
+        <h1 class="dropshadow">
             <Emoji content='🎉' /> TGF Party Games <Emoji content='🎮' />
         </h1>
     </a>
@@ -19,7 +19,7 @@
 </main>
 <footer>
     <div id="how-to-play" style="flex-direction: column; text-align: center; font-size: 1em; margin-top: 2.25rem" class="flex-center">
-        <h3 class="dropdown" on:click={() => showing = !showing}>How To Play {$route.meta.title} <Emoji content={showing ? '⬆️' : '⬇️'} /></h3>
+        <h3 class="dropdown dropshadow" on:click={() => showing = !showing}>How To Play {$route.meta.title} <Emoji content={showing ? '⬆️' : '⬇️'} /></h3>
         {#if showing}
             <div class="flex-center">
                 <p use:focus use:emoji transition:fly={{ duration: 500, y: -20}}>{$route.meta.description}</p>

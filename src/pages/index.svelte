@@ -4,7 +4,7 @@
 
     export let scoped;
 </script>
-<h1 class="games-header"><Emoji content='🎉' /> Games <Emoji content='🎮' /></h1>
+<h1 class="games-header dropshadow"><Emoji content='🎉' /> Games <Emoji content='🎮' /></h1>
 <div class="game-cards-root">
     {#each scoped.games as game}
         <GameCard path={game.path} icon={game.meta.icon} title={game.meta.title} />

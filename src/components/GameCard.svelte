@@ -9,8 +9,8 @@
 
 <a href={$url(path)}>
     <div class="game-card">
-        <h1 class="game-icon"><Emoji content={icon} fill /></h1>
-        <h1 class="game-title">{title}</h1>
+        <h1 class="game-icon dropshadow"><Emoji content={icon} fill /></h1>
+        <h1 class="game-title dropshadow">{title}</h1>
     </div>
 </a>
 

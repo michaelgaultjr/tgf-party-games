@@ -1,0 +1,70 @@
+<!-- routify:options icon="💬" -->
+<!-- routify:options title="Name It" -->
+<!-- routify:options description="Select a player to play and then press the 🎲 or Play button. The player has 5 seconds to name 3 of the randomly selected item, if they successfully name the items, stop the timer by pressing countdown or Stop button, then record the time and move onto the next player, if times runs out, they are out. Whoever has the highest time by the end wins." -->
+
+<script lang="ts">
+    import ProgressRing from '../../components/ProgessRing.svelte';
+    import RandomList from '../../random-list';
+    import numeral from 'numeral';
+    import { Stopwatch } from '../../utils';
+
+    const timer = new Stopwatch(3000, (t: number) => {
+        timer.ticks = timer.ticks;
+
+        timeDisplay = numeral(timer.ticks / 100).format('0.0') + 's';
+    });
+
+    const randomList = new RandomList<string>([...'abcdefghijklmnopqrstuvwxyz']);
+
+    let timeDisplay: string;
+    let selected = '?';
+    async function toggle() {
+        timer.active = timer.active;
+
+        if (timer.active) {
+            timer.stop();
+            return;
+            
+        }
+        
+        timer.start();
+        selected = randomList.getRandomItem();
+    }
+</script>
+
+<div class="flex-center-col">
+    <label class="sub-header dropshadow">Name a Person, Place, and Thing that begin with...</label>
+
+    <ProgressRing max={timer.totalTicks} bind:value={timer.ticks} size={350} stroke={24}>
+        <div class="progress-content dropshadow">
+            <div class="flex-center-col">
+                <h1 class="uppercase">{selected}</h1>
+                <label class="time-display">{timeDisplay ? timeDisplay : ''}</label>
+            </div>
+        </div>
+    </ProgressRing>
+
+    <button class="fancy-btn" class:btn-play={!timer.active} class:btn-stop={timer.active} on:click={toggle}>
+        {timer.active ? 'Stop' : 'Play'}
+    </button>
+</div>
+
+<style>
+    .uppercase {
+        font-size: 5rem;
+        text-transform: capitalize;
+
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .time-display {
+        font-size: 1.5rem;
+    }
+
+    .sub-header {
+        font-size: 1.75rem;
+        text-align: center;
+        max-width: 85vw;
+    }
+</style>

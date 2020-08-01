@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
     import twemoji from 'twemoji';
 
     export let content = '✋';
-    export let fill = false;
+    export let fill: boolean;
     
     let params = null;
     if (fill) {
         params = { 
-			folder: 'svg', 
+			folder: 'svg',
 			ext: '.svg',
 			className: 'emoji-fill'
 		}
