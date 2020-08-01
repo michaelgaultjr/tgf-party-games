@@ -35,6 +35,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2.1.0
+
     - name: Download 'dist' files
       uses: actions/download-artifact@v2
       with:
