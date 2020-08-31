@@ -22,9 +22,6 @@ jobs:
         run: |
           npm install
           npm run build
-    
-      - name: List Files
-        run: ls dist
 
       - name: Deploy
         uses: SamKirkland/FTP-Deploy-Action@3.1.1
