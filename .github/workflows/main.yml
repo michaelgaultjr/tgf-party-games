@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2.1.0
 
     - name: Download 'dist-files'
       uses: actions/download-artifact@v2
@@ -46,8 +46,8 @@ jobs:
       run: ls -R
 
     - name: Deploy Files
-      uses: sebastianpopp/git-ftp-action@releases/v3
+      uses: SamKirkland/FTP-Deploy-Action@3.1.1
       with:
-        url: ${{ secrets.FTP_HOST }}
-        user: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
+        ftp-server: ${{ secrets.FTP_HOST }}
+        ftp-username: ${{ secrets.FTP_USERNAME }}
+        ftp-password: ${{ secrets.FTP_PASSWORD }}
