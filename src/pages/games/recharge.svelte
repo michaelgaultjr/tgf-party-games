@@ -1,6 +1,6 @@
 <!-- routify:options icon="📱" -->
 <!-- routify:options title="Recharge" -->
-<!-- routify:options description="TODO: Write Description" -->
+<!-- routify:options description="Press 'Play' and take turns guessing letters until the word is complete or your run out of charge. You lose charge every time you guess incorrectly. A correct guess will recharge the phone." -->
 
 <script lang="ts">
     import { writable } from "svelte/store";
@@ -38,7 +38,7 @@
         if (word.toLowerCase().includes(letter)) {
             correct.set([...$correct, letter]);
             
-            if (charge < 2) charge++;
+            if (charge < 3) charge++;
 
             const sortedUniqueWord = [...new Set(word.toLowerCase().split(' ').join(''))].sort();
             
@@ -122,10 +122,8 @@
             Play
         {:else if $gameState == GameState.Playing}
             Game In Progress...
-        {:else if $gameState == GameState.Won}
-            You Win. Play Again
         {:else}
-            You Lost. Play Again
+            Play Again
         {/if}
     </button>
 </div>
@@ -151,7 +149,7 @@
         border-radius: .5rem .5rem .0rem .0rem;
 
         /* Overlay */
-        top: 44%;
+        top: 45.25%;
     }
 
     .battery-container {
