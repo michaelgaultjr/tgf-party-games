@@ -50,11 +50,13 @@ export class Stopwatch {
     ticks: number;
 
     interval: number;
-    onTick?: (ticks: number) => any;
+    onTick?: (t: number) => any;
+    onStop?: () => any;
 
-    constructor(ticks: number, onTick?: (ticks: number) => any) {
+    constructor(ticks: number, onTick?: (t: number) => any, onStop?: () => any) {
         this.totalTicks = ticks;
         this.onTick = onTick;
+        this.onStop = onStop;
     }
 
     start(): void {
@@ -66,6 +68,7 @@ export class Stopwatch {
 
     stop() {
         clearInterval(this.interval);
+        if (this.onStop) this.onStop();
         this.active = false;
     }
 
@@ -77,7 +80,7 @@ export class Stopwatch {
         }
         timer.ticks--;
 
-        timer.onTick(this.ticks);
+        if (timer.onTick) timer.onTick(timer.ticks);
     }
     
     async toggle() {

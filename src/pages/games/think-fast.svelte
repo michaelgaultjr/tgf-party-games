@@ -2,7 +2,7 @@
 <!-- routify:options title="Think Fast" -->
 <!-- routify:options description="Select a player to play and then press the 🎲 or Play button. The player has 5 seconds to name 3 of the randomly selected item, if they successfully name the items, stop the timer by pressing countdown or Stop button, then record the time and move onto the next player, if times runs out, they are out. Whoever has the highest time by the end wins." -->
 
-<script lang="typescript">
+<script lang="ts">
     import { fly } from 'svelte/transition';
     import ProgressRing from '../../components/ProgessRing.svelte';
     import Emoji from '../../components/Emoji.svelte';
@@ -21,10 +21,12 @@
     let inProgress: boolean = false;
     let selectedItem: string = null;
 
-    let circleText: string = '🎲'; // Progress Circle Text
+    // Progress Circle Text
+    let circleText: string = '🎲'; 
 
     const timer = new Stopwatch(500, (t: number) => {
         timer.ticks = timer.ticks;
+        timer.active = timer.active;
         const remaining = t / 100;
 
         circleText = `${numeral(remaining).format('0.00')}s`;
@@ -82,8 +84,8 @@
 </div>
 
 <div class="flex-center">
-	<button class="fancy-btn" disabled={introPlaying} class:btn-play={!inProgress} class:btn-stop={inProgress} on:click={toggleTimer}>
-		{inProgress ? 'Stop' : 'Play'}
+	<button class="fancy-btn" disabled={introPlaying} class:btn-play={!timer.active} class:btn-stop={timer.active} on:click={toggleTimer}>
+		{timer.active ? 'Stop' : 'Play'}
 	</button>
 </div>
 

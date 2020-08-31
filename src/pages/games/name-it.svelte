@@ -1,6 +1,6 @@
 <!-- routify:options icon="💬" -->
 <!-- routify:options title="Name It" -->
-<!-- routify:options description="Select a player to play and then press the 🎲 or Play button. The player has 5 seconds to name 3 of the randomly selected item, if they successfully name the items, stop the timer by pressing countdown or Stop button, then record the time and move onto the next player, if times runs out, they are out. Whoever has the highest time by the end wins." -->
+<!-- routify:options description="Select a player to play and then press the 🎲 or Play button. The player has 30 seconds to name 3 of the randomly selected item, if they successfully name the items, stop the timer by pressing countdown or Stop button, then record the time and move onto the next player, if times runs out, they are out. Whoever has the highest time by the end wins." -->
 
 <script lang="ts">
     import ProgressRing from '../../components/ProgessRing.svelte';
@@ -10,8 +10,13 @@
 
     const timer = new Stopwatch(3000, (t: number) => {
         timer.ticks = timer.ticks;
+        timer.active = timer.active;
 
-        timeDisplay = numeral(timer.ticks / 100).format('0.0') + 's';
+        const ticks = t / 100
+
+        timeDisplay = numeral(ticks).format('0.0') + 's';
+    }, () => {
+        timer.active = timer.active;
     });
 
     const randomList = new RandomList<string>([...'abcdefghijklmnopqrstuvwxyz']);
@@ -24,7 +29,6 @@
         if (timer.active) {
             timer.stop();
             return;
-            
         }
         
         timer.start();

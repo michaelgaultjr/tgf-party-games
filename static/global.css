@@ -111,10 +111,6 @@ button {
 	outline: none;
 }
 
-button:focus {
-	border-color: #666;
-}
-
 .btn-play {
 	color: #ffffff;
 	background-color: #009d00;
