@@ -37,13 +37,13 @@
 </script>
 
 <div class="flex-center-col">
-    <label class="sub-header dropshadow">Name a Person, Place, and Thing that begin with...</label>
+    <span class="sub-header dropshadow">Name a Person, Place, and Thing that begin with...</span>
 
     <ProgressRing max={timer.totalTicks} bind:value={timer.ticks} size={350} stroke={24}>
         <div class="progress-content dropshadow">
             <div class="flex-center-col">
                 <h1 class="uppercase">{selected}</h1>
-                <label class="time-display">{timeDisplay ? timeDisplay : ''}</label>
+                <span class="time-display">{timeDisplay ? timeDisplay : ''}</span>
             </div>
         </div>
     </ProgressRing>

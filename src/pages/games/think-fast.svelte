@@ -10,16 +10,19 @@
     import { wait, Stopwatch } from '../../utils';
     import RandomList from '../../random-list';
     import WordList from '../../data/think-fast-words.json';
+    import { writable, get } from 'svelte/store';
+
+    enum GameState {
+        Waiting,
+        Intro,
+        Playing
+    }
 
     const randomListOptions = new RandomList<string>(WordList);
 
-    // Intro Variables
-    let introPlaying: boolean = false;
     let introStage: number = null;
-
-    // Game State Variables
-    let inProgress: boolean = false;
     let selectedItem: string = null;
+    const gameState = writable<GameState>(GameState.Waiting);
 
     // Progress Circle Text
     let circleText: string = '🎲'; 
@@ -33,16 +36,16 @@
     });
 
     async function intro() {
-        introPlaying = true;
+        gameState.set(GameState.Intro);
         for (introStage = 0; introStage < 2; introStage++) await wait(1000);
-        introPlaying = false;
     }
     
-    async function toggleTimer() {
-        if (introPlaying) return;
+    async function toggle() {
+        if (get(gameState) == GameState.Intro) return;
 
         if (timer.active) {
             timer.stop();
+            gameState.set(GameState.Waiting)
             return;
         }
 
@@ -50,6 +53,7 @@
         selectedItem = randomListOptions.getRandomItem();
         await wait(500);
         timer.start();
+        gameState.set(GameState.Playing);
     }
 
     const flyParams = { duration: 1000, y: -30 }
@@ -73,7 +77,7 @@
     </h1>
 {/if}
 
-<div class="flex-center" on:click={toggleTimer}>
+<div class="flex-center">
     <ProgressRing max={timer.totalTicks} bind:value={timer.ticks} size={350} stroke={24}>
         <div class="progress-content-effects">
             <span class="dropshadow" style="font-size: 6rem;">
@@ -84,8 +88,8 @@
 </div>
 
 <div class="flex-center">
-	<button class="fancy-btn" disabled={introPlaying} class:btn-play={!timer.active} class:btn-stop={timer.active} on:click={toggleTimer}>
-		{timer.active ? 'Stop' : 'Play'}
+	<button class="fancy-btn" disabled={$gameState == GameState.Intro} class:btn-play={$gameState != GameState.Playing} class:btn-stop={$gameState == GameState.Playing} on:click={toggle}>
+		{$gameState == GameState.Playing ? 'Stop' : 'Play'}
 	</button>
 </div>
 
