@@ -4,6 +4,7 @@
 
 <script lang="ts">
     import { writable } from "svelte/store";
+    import Battery from '../../components/Battery.svelte';
     import Emoji from '../../components/Emoji.svelte';
     import RechargeWords from "../../data/recharge-words.json";
     import RandomList from "../../random-list";
@@ -15,6 +16,7 @@
         Lost
     }
 
+    const MAX_CHARGE = 5;
     const letters = [...'qwertyuiopasdfghjklzxcvbnm'];
     const rows = [
         letters.slice(0, 10),   // a..j
@@ -23,7 +25,7 @@
     ]
         
     let word = 'Recharge';
-    let charge = 3;
+    let charge = MAX_CHARGE;
     const gameState = writable<GameState>(GameState.Waiting);
 
     const randomList = new RandomList<string>(RechargeWords);
@@ -38,7 +40,7 @@
         if (word.toLowerCase().includes(letter)) {
             correct.set([...$correct, letter]);
             
-            if (charge < 3) charge++;
+            if (charge < MAX_CHARGE) charge++;
 
             const sortedUniqueWord = [...new Set(word.toLowerCase().split(' ').join(''))].sort();
             
@@ -63,7 +65,7 @@
     }
 
     function start() {
-        charge = 3;
+        charge = MAX_CHARGE;
         correct.set(new Array<string>());
         guessed.set(new Set<string>());
         gameState.set(GameState.Playing);
@@ -77,9 +79,9 @@
     <div class="phone-container flex-center">
         <img class="phone-svg dropshadow" src="/images/phone.svg" alt="Phone">
         <div class="flex-center-col battery-container">
-            <img class="battery-image" src="/images/battery_{charge}.svg" alt="Battery">
+            <Battery progress={charge} max={MAX_CHARGE} />
             {#if $gameState == GameState.Playing || $gameState == GameState.Waiting}
-                {(charge / 3 * 100).toFixed(0)}%
+                {(charge / MAX_CHARGE * 100).toFixed(0)}%
             {:else if $gameState == GameState.Won}
                 <span>You Win! <Emoji content='🏆' /></span>
             {:else if $gameState == GameState.Lost}
@@ -153,15 +155,11 @@
     }
 
     .battery-container {
+        width: 100%;
         position: absolute;
         top: 20%;
 
         filter: drop-shadow(0px 3px 2px rgba(0, 0, 0, .3));
-    }
-
-    .battery-image {
-        position: relative;
-        width: 50%;
     }
 
     .word-container {      

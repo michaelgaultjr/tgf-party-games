@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, beforeUpdate } from 'svelte';
+	import { beforeUpdate } from 'svelte';
 	import { lerpHexColor } from '../utils';
 
     export let stroke = 4;
