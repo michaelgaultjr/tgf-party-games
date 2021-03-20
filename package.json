@@ -33,6 +33,7 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
+    "@roxi/routify": "^2.15.1",
     "@sveltech/routify": "^1.9.9",
     "easytimer.js": "^4.3.0",
     "numeral": "^2.0.6",
