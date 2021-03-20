@@ -43,13 +43,16 @@ function createConfig({ output, inlineDynamicImports, plugins = [] }) {
         flatten: false
       }),
       svelte({
-        // enable run-time checks when not in production
-        dev: !production,
-        hydratable: true,
-        // we'll extract any component CSS out into
-        // a separate file — better for performance
-        css: css => {
-          css.write(`${buildDir}/bundle.css`);
+        emitCss: false,
+        compilerOptions: {
+          // enable run-time checks when not in production
+          dev: !production,
+          hydratable: true,
+          // we'll extract any component CSS out into
+          // a separate file — better for performance
+          css: css => {
+            css.write(`${buildDir}/bundle.css`);
+          },
         },
         preprocess: autoPreprocess()
       }),
