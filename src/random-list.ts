@@ -1,40 +1,40 @@
-import { random } from './utils';
+import { random } from "./utils";
 
-export default class RandomList<TItem> {
-    defaultItems: Array<TItem>;
-    items: Array<RandomItem<TItem>>;
+export default class RandomList<T> {
+  defaultItems: Array<T>;
+  items: Array<RandomItem<T>>;
 
-    constructor(items: Array<TItem>) {
-        this.defaultItems = items;
-        this.resetList();
-    }
+  constructor(items: Array<T>) {
+    this.defaultItems = items;
+    this.reset();
+  }
 
-    getRandomItem(): TItem {
-        if (this.allUsed()) this.resetList();
-        const availableItems = this.items.filter(item => !item.used);
+  get(): T {
+    if (this.anyRemaining()) this.reset();
+    const availableItems = this.items.filter((item) => !item.used);
 
-        const index: number = random(1, availableItems.length) - 1;
-        const item: RandomItem<TItem> = availableItems[index];
+    const index = random(1, availableItems.length) - 1;
+    const item = availableItems[index];
 
-        item.used = true;
-        return item.value;
-    }
+    item.used = true;
+    return item.value;
+  }
 
-    resetList() { 
-        this.items = this.defaultItems.map(value => new RandomItem<TItem>(value))
-    }
+  reset() {
+    this.items = this.defaultItems.map((value) => new RandomItem<T>(value));
+  }
 
-    private allUsed() {
-        return !this.items.some(item => !item.used)
-    }
+  private anyRemaining() {
+    return !this.items.some((item) => !item.used);
+  }
 }
 
 class RandomItem<TItem> {
-    value: TItem;
-    used: boolean;
+  value: TItem;
+  used: boolean;
 
-    constructor(value: TItem) {
-        this.value = value;
-        this.used = false;
-    }
+  constructor(value: TItem) {
+    this.value = value;
+    this.used = false;
+  }
 }
