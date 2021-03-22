@@ -3,8 +3,9 @@
   import ItemList from "../../data/bring-it-items.json";
   import RandomList from "../../random-list";
   import Emoji from "../../components/Emoji.svelte";
-  import { wait } from "../../utils";
+  import { delay, track } from "../../utils";
   import { fly } from "svelte/transition";
+
 
   const list = new RandomList<string>(ItemList);
   let item: string = "...";
@@ -12,18 +13,15 @@
 
   async function nextItem() {
     selecting = true;
-    await wait(2000);
-
+    await delay(2000);
     item = list.get();
-
     selecting = false;
+
+    track(item)
   }
 
   const flyParams = { duration: 750, y: -75 };
 </script>
-
-<!-- routify:options icon="🤳" -->
-<!-- routify:options title="Bring It" -->
 <h1 class="center-text dropshadow">Bring a...</h1>
 
 {#if selecting}

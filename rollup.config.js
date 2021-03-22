@@ -1,154 +1,100 @@
-import svelte from 'rollup-plugin-svelte';
+import svelte from 'rollup-plugin-svelte-hot';
+import Hmr from 'rollup-plugin-hot'
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
-import copy from 'rollup-plugin-copy'
-import del from 'del'
-
-import json from '@rollup/plugin-json';
+import { copySync, removeSync } from 'fs-extra'
+import { spassr } from 'spassr'
+import getConfig from '@roxi/routify/lib/utils/config'
 import autoPreprocess from 'svelte-preprocess'
-import typescript from '@rollup/plugin-typescript';
+import postcssImport from 'postcss-import'
+import { injectManifest } from 'rollup-plugin-workbox'
+import typescript from '@rollup/plugin-typescript'
+import json from '@rollup/plugin-json'
 
-const staticDir = 'static'
-const distDir = 'dist'
+
+const { distDir } = getConfig() // use Routify's distDir for SSOT
+const assetsDir = 'assets'
 const buildDir = `${distDir}/build`
+const isNollup = !!process.env.NOLLUP
 const production = !process.env.ROLLUP_WATCH;
-const bundling = process.env.BUNDLING || production ? 'dynamic' : 'bundle'
-const shouldPrerender = (typeof process.env.PRERENDER !== 'undefined') ? process.env.PRERENDER : !!production
+
+// clear previous builds
+removeSync(distDir)
+removeSync(buildDir)
 
 
-del.sync(distDir + '/**')
+const serve = () => ({
+    writeBundle: async () => {
+        const options = {
+            assetsDir: [assetsDir, distDir],
+            entrypoint: `${assetsDir}/__app.html`,
+            script: `${buildDir}/main.js`
+        }
+        spassr({ ...options, port: 5000 })
+        spassr({ ...options, ssr: true, port: 5005, ssrOptions: { inlineDynamicImports: true, dev: true } })
+    }
+})
+const copyToDist = () => ({ writeBundle() { copySync(assetsDir, distDir) } })
 
-function createConfig({ output, inlineDynamicImports, plugins = [] }) {
-  const transform = inlineDynamicImports ? bundledTransform : dynamicTransform
 
-  return {
-    inlineDynamicImports,
-    input: `src/main.ts`,
+export default {
+    preserveEntrySignatures: false,
+    input: [`src/main.ts`],
     output: {
-      name: 'app',
-      sourcemap: true,
-      ...output
+        sourcemap: true,
+        format: 'esm',
+        dir: buildDir,
+        // for performance, disabling filename hashing in development
+        chunkFileNames: `[name]${production && '-[hash]' || ''}.js`
     },
     plugins: [
-      typescript(),
-      json(),
-      copy({
-        targets: [
-          { src: staticDir + '/**/!(__index.html)', dest: distDir },
-          { src: `${staticDir}/__index.html`, dest: distDir, rename: '__app.html', transform },
-        ],
-        copyOnce: true,
-        flatten: false
-      }),
-      svelte({
-        emitCss: false,
-        compilerOptions: {
-          // enable run-time checks when not in production
-          dev: !production,
-          hydratable: true,
-          // we'll extract any component CSS out into
-          // a separate file — better for performance
-          css: css => {
-            css.write(`${buildDir}/bundle.css`);
-          },
+        typescript(),
+        json(),
+        svelte({
+            dev: !production, // run-time checks      
+            // Extract component CSS — better performance
+            css: css => css.write(`bundle.css`),
+            hot: isNollup,
+            preprocess: [
+                autoPreprocess({
+                    postcss: { plugins: [postcssImport()] },
+                    defaults: { style: 'postcss' }
+                })
+            ]
+        }),
+
+        // resolve matching modules from current working directory
+        resolve({
+            browser: true,
+            dedupe: importee => !!importee.match(/svelte(\/|$)/)
+        }),
+        commonjs(),
+
+        production && terser(),
+        !production && !isNollup && serve(),
+        !production && !isNollup && livereload(distDir), // refresh entire window when code is updated
+        !production && isNollup && Hmr({ inMemory: true, public: assetsDir, }), // refresh only updated code
+        {
+            // provide node environment on the client
+            transform: code => ({
+                code: code.replace(/process\.env\.NODE_ENV/g, `"${process.env.NODE_ENV}"`),
+                map: { mappings: '' }
+            })
         },
-        preprocess: autoPreprocess()
-      }),
-
-      // If you have external dependencies installed from
-      // npm, you'll most likely need these plugins. In
-      // some cases you'll need additional configuration —
-      // consult the documentation for details:
-      // https://github.com/rollup/rollup-plugin-commonjs
-      resolve({
-        browser: true,
-        preferBuiltins: false,
-        dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
-      }),
-      commonjs(),
-
-      // If we're building for production (npm run build
-      // instead of npm run dev), minify
-      production && terser(),
-      ...plugins
+        injectManifest({
+            globDirectory: assetsDir,
+            globPatterns: ['**/*.{js,css,svg}', '__app.html'],
+            swSrc: `src/sw.js`,
+            swDest: `${distDir}/serviceworker.js`,
+            maximumFileSizeToCacheInBytes: 10000000, // 10 MB,
+            mode: 'production'
+        }),
+        production && copyToDist(),
     ],
     watch: {
-      clearScreen: false
+        clearScreen: false,
+        buildDelay: 100,
     }
-  }
-}
-
-
-const bundledConfig = {
-  inlineDynamicImports: true,
-  output: {
-    format: 'iife',
-    file: `${buildDir}/bundle.js`
-  },
-  plugins: [
-    !production && serve(),
-    !production && livereload(distDir)
-  ]
-}
-
-const dynamicConfig = {
-  inlineDynamicImports: false,
-  output: {
-    format: 'esm',
-    dir: buildDir
-  },
-  plugins: [
-    !production && livereload(distDir),
-  ]
-}
-
-
-const configs = [createConfig(bundledConfig)]
-if (bundling === 'dynamic')
-  configs.push(createConfig(dynamicConfig))
-if (shouldPrerender) [...configs].pop().plugins.push(prerender())
-export default configs
-
-
-function serve() {
-  let started = false;
-  return {
-    writeBundle() {
-      if (!started) {
-        started = true;
-        require('child_process').spawn('npm', ['run', 'serve'], {
-          stdio: ['ignore', 'inherit', 'inherit'],
-          shell: true
-        });
-      }
-    }
-  };
-}
-
-function prerender() {
-  return {
-    writeBundle() {
-      if (shouldPrerender) {
-        require('child_process').spawn('npm', ['run', 'export'], {
-          stdio: ['ignore', 'inherit', 'inherit'],
-          shell: true
-        });
-      }
-    }
-  }
-}
-
-function bundledTransform(contents) {
-  return contents.toString().replace('__SCRIPT__', `
-	<script defer src="/build/bundle.js" ></script>
-	`)
-}
-
-function dynamicTransform(contents) {
-  return contents.toString().replace('__SCRIPT__', `
-	<script type="module" defer src="https://unpkg.com/dimport@1.0.0/dist/index.mjs?module" data-main="/build/main.js"></script>
-	<script nomodule defer src="https://unpkg.com/dimport/nomodule" data-main="/build/main.js"></script>
-	`)
 }

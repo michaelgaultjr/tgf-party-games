@@ -1,5 +1,9 @@
-/node_modules/
+**/node_modules/
 /dist/
 .DS_Store
 **/.history
-/.vscode
+src/tmp/
+.routify
+.netlify
+assets/build
+.vercel
