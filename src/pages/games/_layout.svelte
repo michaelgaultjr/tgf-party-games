@@ -1,5 +1,5 @@
-<script>
-  import { route, focus } from "@sveltech/routify";
+<script lang="ts">
+  import { focus, page } from "@roxi/routify";
   import { fly } from "svelte/transition";
   import Emoji from "../../components/Emoji.svelte";
   import { emoji } from "../../utils.js";
@@ -26,13 +26,13 @@
     class="flex-center">
     <h3 class="dropdown dropshadow" on:click={() => (showing = !showing)}>
       How To Play
-      {$route.meta.title}
+      {$page.meta.title}
       <Emoji content={showing ? '⬆️' : '⬇️'} />
     </h3>
     {#if showing}
       <div class="flex-center">
         <p use:focus use:emoji transition:fly={{ duration: 500, y: -20 }}>
-          {$route.meta.description}
+          {$page.meta.description}
         </p>
       </div>
     {/if}

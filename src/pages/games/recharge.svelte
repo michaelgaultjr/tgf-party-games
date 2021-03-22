@@ -5,6 +5,7 @@
   import Emoji from "../../components/Emoji.svelte";
   import RechargeWords from "../../data/recharge-words.json";
   import RandomList from "../../random-list";
+import { track } from "../../utils";
 
   enum GameState {
     Waiting,
@@ -56,10 +57,12 @@
 
   function win() {
     gameState.set(GameState.Won);
+    track('Win');
   }
 
   function lose() {
     gameState.set(GameState.Lost);
+    track('Lose')
   }
 
   function start() {

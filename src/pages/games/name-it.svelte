@@ -1,9 +1,11 @@
+<!-- routify:options icon="💬" -->
+<!-- routify:options title="Name It" -->
 <!-- routify:options description="Select a player to play and then press the 🎲 or Play button. The player has 30 seconds to name 3 of the randomly selected item, if they successfully name the items, stop the timer by pressing countdown or Stop button, then record the time and move onto the next player, if times runs out, they are out. Whoever has the highest time by the end wins." -->
 <script lang="ts">
   import ProgressRing from "../../components/ProgessRing.svelte";
   import RandomList from "../../random-list";
   import numeral from "numeral";
-  import { Stopwatch } from "../../utils";
+  import { Stopwatch, track } from "../../utils";
 
   const timer = new Stopwatch(
     3000,
@@ -29,6 +31,7 @@
 
     if (timer.active) {
       timer.stop();
+      track(`${(timer.ticks / 100).toFixed()} seconds`)
       return;
     }
 
@@ -37,11 +40,10 @@
   }
 </script>
 
-<!-- routify:options icon="💬" -->
-<!-- routify:options title="Name It" -->
 <div class="flex-center-col">
-  <span class="sub-header dropshadow">Name a Person, Place, and Thing that begin
-    with...</span>
+  <span class="sub-header dropshadow">
+    Name a Person, Place, and Thing that begin with...
+  </span>
 
   <ProgressRing
     max={timer.totalTicks}
@@ -51,7 +53,7 @@
     <div class="progress-content dropshadow">
       <div class="flex-center-col">
         <h1 class="uppercase">{selected}</h1>
-        <span class="time-display">{timeDisplay ? timeDisplay : ''}</span>
+        <span class="time-display">{timeDisplay ? timeDisplay : ""}</span>
       </div>
     </div>
   </ProgressRing>
@@ -61,7 +63,7 @@
     class:btn-play={!timer.active}
     class:btn-stop={timer.active}
     on:click={toggle}>
-    {timer.active ? 'Stop' : 'Play'}
+    {timer.active ? "Stop" : "Play"}
   </button>
 </div>
 

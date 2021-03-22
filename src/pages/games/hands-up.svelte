@@ -1,12 +1,17 @@
 <!-- routify:options description="Tell everyone to put up 1, 2, or no hands and press play, anyone who put up the amount of hands that matches the result is out, if it's a tie play again." -->
-<script lang="typescript">
+<script lang="ts">
   import { fly } from "svelte/transition";
+  import { delay, random, track } from "../../utils";
   import Emoji from "../../components/Emoji.svelte";
-  import { wait, random } from "../../utils";
+
+  type Option = {
+    text: string;
+    icon: string;
+  }
 
   let rolling = false;
-  let selected = null;
-  const options = [
+  let selected: Option = null;
+  const options: Option[] = [
     { text: "Hands Down", icon: "✊" },
     { text: "Hand Up", icon: "✋" },
     { text: "Hands Up", icon: "🙌" },
@@ -22,7 +27,7 @@
 
     for (let i = offset; i < cycleCount; i++) {
       selected = options[i % options.length];
-      await wait(duration / cycleCount);
+      await delay(duration / cycleCount);
     }
   }
 
@@ -34,6 +39,8 @@
     selected = options[index];
 
     rolling = false;
+    
+    track(selected.text)
   }
 
   const flyParams = { duration: 750, y: -100 };

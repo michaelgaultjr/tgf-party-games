@@ -1,6 +1,6 @@
 <script>
-	import { layout, metatags, page } from "@sveltech/routify";
-	import { TabsTransition } from "@sveltech/routify/decorators"
+	import { layout, metatags, page } from "@roxi/routify";
+	import { TabsTransition } from "@roxi/routify/decorators"
 	
 	$:{
 		metatags.title = $page.meta.title + $page.meta.icon ? `${$page.meta.title} ${$page.meta.icon}` : '🎉 TGF Party Games 🎮';
