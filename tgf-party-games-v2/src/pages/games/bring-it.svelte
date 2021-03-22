@@ -5,7 +5,7 @@
   import ItemList from "../../data/bring-it-items.json";
   import RandomList from "../../random-list";
   import Emoji from "../../components/Emoji.svelte";
-  import { delay } from "../../utils";
+  import { delay, track } from "../../utils";
   import { fly } from "svelte/transition";
 
 

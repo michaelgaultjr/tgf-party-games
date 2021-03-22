@@ -2,17 +2,14 @@
 <!-- routify:options title="Think Fast" -->
 <!-- routify:options description="Select a player to play and then press the 🎲 or Play button. The player has 5 seconds to name 3 of the randomly selected item, if they successfully name the items, stop the timer by pressing countdown or Stop button, then record the time and move onto the next player, if times runs out, they are out. Whoever has the highest time by the end wins." -->
 <script lang="ts">
-  import type { Tracker } from "../types";
   import { fly } from "svelte/transition";
-  import { delay, Stopwatch } from "../../utils";
+  import { delay, Stopwatch, track } from "../../utils";
   import { writable, get } from "svelte/store";
   import ProgressRing from "../../components/ProgessRing.svelte";
   import Emoji from "../../components/Emoji.svelte";
   import numeral from "numeral";
   import RandomList from "../../random-list";
   import WordList from "../../data/think-fast-words.json";
-
-  export let track: Tracker;
 
   enum GameState {
     Waiting,
@@ -48,7 +45,7 @@
     if (timer.active) {
       timer.stop();
       gameState.set(GameState.Waiting);
-      track((timer.ticks / 100).toPrecision(2))
+      track((timer.ticks / 100).toFixed())
       return;
     }
 

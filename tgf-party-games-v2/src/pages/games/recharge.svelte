@@ -1,13 +1,11 @@
 <!-- routify:options description="Press 'Play' and take turns guessing letters until the word is complete or your run out of charge. You lose charge every time you guess incorrectly. A correct guess will recharge the phone." -->
 <script lang="ts">
-  import type { Tracker } from "../types";
   import { writable } from "svelte/store";
   import Battery from "../../components/Battery.svelte";
   import Emoji from "../../components/Emoji.svelte";
   import RechargeWords from "../../data/recharge-words.json";
   import RandomList from "../../random-list";
-
-  export let track: Tracker;
+import { track } from "../../utils";
 
   enum GameState {
     Waiting,

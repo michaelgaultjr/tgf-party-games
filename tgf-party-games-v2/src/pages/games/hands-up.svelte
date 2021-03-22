@@ -1,11 +1,8 @@
 <!-- routify:options description="Tell everyone to put up 1, 2, or no hands and press play, anyone who put up the amount of hands that matches the result is out, if it's a tie play again." -->
 <script lang="ts">
-  import type { Tracker } from "../types";
   import { fly } from "svelte/transition";
-  import { delay, random } from "../../utils";
+  import { delay, random, track } from "../../utils";
   import Emoji from "../../components/Emoji.svelte";
-
-  export let track: Tracker;
 
   type Option = {
     text: string;

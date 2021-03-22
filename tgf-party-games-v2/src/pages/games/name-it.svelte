@@ -2,13 +2,10 @@
 <!-- routify:options title="Name It" -->
 <!-- routify:options description="Select a player to play and then press the 🎲 or Play button. The player has 30 seconds to name 3 of the randomly selected item, if they successfully name the items, stop the timer by pressing countdown or Stop button, then record the time and move onto the next player, if times runs out, they are out. Whoever has the highest time by the end wins." -->
 <script lang="ts">
-  import type { Tracker } from "../types";
   import ProgressRing from "../../components/ProgessRing.svelte";
   import RandomList from "../../random-list";
   import numeral from "numeral";
-  import { Stopwatch } from "../../utils";
-
-  export let track: Tracker;
+  import { Stopwatch, track } from "../../utils";
 
   const timer = new Stopwatch(
     3000,
