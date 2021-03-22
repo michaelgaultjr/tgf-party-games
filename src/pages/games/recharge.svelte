@@ -5,7 +5,7 @@
   import Emoji from "../../components/Emoji.svelte";
   import RechargeWords from "../../data/recharge-words.json";
   import RandomList from "../../random-list";
-import { track } from "../../utils";
+  import { track } from "../../utils";
 
   enum GameState {
     Waiting,
