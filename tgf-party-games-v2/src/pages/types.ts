@@ -1,0 +1,1 @@
+export type Tracker = (state: string) => void;
