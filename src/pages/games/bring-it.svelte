@@ -1,4 +1,7 @@
+  <!-- routify:options icon="🤳" -->
+<!-- routify:options title="Bring It" -->
 <!-- routify:options description="Press play and have everyone show the randomly selected item on the screen, whoever shows the item first wins." -->
+
 <script lang="ts">
   import ItemList from "../../data/bring-it-items.json";
   import RandomList from "../../random-list";
