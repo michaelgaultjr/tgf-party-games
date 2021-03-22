@@ -1,4 +1,4 @@
-![TGF Party Games Favicon](/static/favicon.png)
+![TGF Party Games Favicon](/assets/favicon.png)
 # 🎉 TGF Party Games 🎮
 TGF Party Games is a collection of small web-based games written using [Svelte](https://svelte.dev/) and deployed on [Vercel](http://vercel.com/).
 
