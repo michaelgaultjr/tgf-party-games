@@ -45,7 +45,7 @@
     if (timer.active) {
       timer.stop();
       gameState.set(GameState.Waiting);
-      track((timer.ticks / 100).toFixed())
+      track(`${(timer.ticks / 100).toFixed()} seconds`)
       return;
     }
 

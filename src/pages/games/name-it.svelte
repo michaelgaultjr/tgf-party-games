@@ -31,12 +31,12 @@
 
     if (timer.active) {
       timer.stop();
+      track(`${(timer.ticks / 100).toFixed()} seconds`)
       return;
     }
 
     timer.start();
     selected = randomList.get();
-    track(selected);
   }
 </script>
 
