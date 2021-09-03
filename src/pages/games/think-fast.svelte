@@ -33,6 +33,8 @@
     const remaining = t / 100;
 
     circleText = `${numeral(remaining).format("0.00")}s`;
+  }, () => {
+    gameState.set(GameState.Waiting);
   });
 
   async function intro() {
@@ -103,6 +105,7 @@
 
 <style>
   .progress-content-effects {
+    max-width: 12vw;
     transition: all 250ms ease-in-out;
   }
 
