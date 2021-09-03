@@ -35,9 +35,7 @@
   </div>
 {:else}
   <span in:fly={flyParams} class="item-display dropshadow">{item}</span>
-{/if}
 
-{#if !selecting}
   <div class="flex-center">
     <button class="fancy-btn btn-play" on:click={nextItem}>Play</button>
   </div>
