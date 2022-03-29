@@ -2,15 +2,15 @@
 	import { beforeUpdate } from 'svelte';
 	import { lerpHexColor } from '../utils';
 
-    export let stroke = 4;
+	export let stroke = 4;
 	export let size = 120;
 	export let max = 100;
-    export let value = max;
-	export let percentage: number;
+	export let value = max;
+	export let percentage: number = 0;
 
 	let strokeOffset = 30;
 	
-    let percent: number;
+	let percent: number;
 	let colorHex: string;
 
 	const radius = size / 2;
@@ -24,7 +24,7 @@
 		colorHex = lerpHexColor(0xff0000, 0x00ff00, percent);
 
 		percentage = Math.round(percent * 100);
-    });
+	});
 </script>
 
 <div style="max-width: {diameter}px; max-height: {diameter}px; width: 100%; height: 100%; margin: 3rem">

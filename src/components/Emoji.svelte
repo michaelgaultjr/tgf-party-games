@@ -2,7 +2,7 @@
 	import twemoji from 'twemoji';
 
 	export let content = '✋';
-	export let fill: boolean;
+	export let fill = false;
 	
 	let params = null;
 	if (fill) {
