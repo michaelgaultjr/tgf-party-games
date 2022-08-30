@@ -3,10 +3,7 @@ import App from './App.svelte';
 
 declare global {
   interface Window {
-    plausible: (event: string, settings?:{
-      callback?: CallableFunction,
-      props?: any
-    }) => void
+    gtag: (type: string, name: string, settings?: Record<string, string | number | boolean>) => void
   }
 }
 

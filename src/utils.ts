@@ -30,10 +30,8 @@ export function random (min: number, max: number): number {
 export function track(state: string | number) {
   const pageMeta = get(page).meta
   console.log(pageMeta.title, state);
-  window.plausible('Games Played', {
-    props: {
-      [pageMeta.title]: state
-    }
+  window.gtag('event', 'games_played', {
+    [pageMeta.title]: state
   }) 
 }
 
